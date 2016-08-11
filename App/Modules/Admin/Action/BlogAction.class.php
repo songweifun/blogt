@@ -11,7 +11,8 @@ class BlogAction extends CommonAction{
      * 博文列表
      */
     public function index(){
-        $this->display();
+        echo 1111;
+        //$this->display();
     }
     /**
      * 添加博文
@@ -36,13 +37,38 @@ class BlogAction extends CommonAction{
 
         );
         $up=new UploadFile($config);
-        if($up->upload('./Uploads/house/')){
+        $up->upload('./Uploads/house/');
+        /*if($up->upload('./Uploads/house/')){
             $this->success('上传成功');
 
         }else{
             $this->error($up->getErrorMsg(),U(GROUP_NAME.'/Blog/addBlog'));
+        }*/
+
+        $data=array(
+            'title'=>I('title'),
+            'content'=>I('content'),
+            'time'=>time(),
+            'click'=>I('click','intval'),
+            'cid'=>I('cid','intval')
+        );
+        if($bid=M('blog')->add($data)){
+            if(isset($_POST['aid'])) {
+                $sql = "insert into 6d_blog_attribute(bid,aid) VALUES";
+                foreach ($_POST['aid'] as $v) {
+                    $sql .= "(" . $bid . "," . $v . "),";
+                }
+                $sql=rtrim($sql,',');
+                //p($sql);die;
+                M('blog_attribute')->query($sql);
+            }
+            $this->success('添加成功',U(GROUP_NAME.'/Blog/index'));
+        }else{
+            $this->error("添加失败");
         }
+
     }
+
 
     /**
      * 上传图片 服务器统一请求接口

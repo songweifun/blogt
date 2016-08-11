@@ -131,10 +131,13 @@ class  ThinkTemplate {
      * @return string
      */
     protected function compiler($tmplContent) {
+        $that=$this;
         //模板解析
         $tmplContent =  $this->parse($tmplContent);
         // 还原被替换的Literal标签
-        $tmplContent =  preg_replace('/<!--###literal(\d+)###-->/eis',"\$this->restoreLiteral('\\1')",$tmplContent);
+        $tmplContent =  preg_replace_callback('/<!--###literal(\d+)###-->/is',function($matches) use($that){
+            return $that->restoreLiteral($matches[1]);
+        },$tmplContent);
         // 添加安全代码
         $tmplContent =  '<?php if (!defined(\'THINK_PATH\')) exit();?>'.$tmplContent;
         if(C('TMPL_STRIP_SPACE')) {
@@ -156,6 +159,7 @@ class  ThinkTemplate {
      * @return string
      */
     public function parse($content) {
+        $that=$this;
         // 内容为空不解析
         if(empty($content)) return '';
         $begin      =   $this->config['taglib_begin'];
@@ -165,7 +169,9 @@ class  ThinkTemplate {
         // 检查PHP语法
         $content    =   $this->parsePhp($content);
         // 首先替换literal标签内容
-        $content    =   preg_replace('/'.$begin.'literal'.$end.'(.*?)'.$begin.'\/literal'.$end.'/eis',"\$this->parseLiteral('\\1')",$content);
+        $content    =   preg_replace_callback('/'.$begin.'literal'.$end.'(.*?)'.$begin.'\/literal'.$end.'/is',function($matches) use($that){
+            return $that->parseLiteral($matches[1]);
+        },$content);
 
         // 获取需要引入的标签库列表
         // 标签库只需要定义一次，允许引入多个一次
@@ -194,8 +200,11 @@ class  ThinkTemplate {
             $this->parseTagLib($tag,$content,true);
         }
         //解析普通模板标签 {tagName}
-        $content = preg_replace('/('.$this->config['tmpl_begin'].')([^\d\s'.$this->config['tmpl_begin'].$this->config['tmpl_end'].'].+?)('.$this->config['tmpl_end'].')/eis',"\$this->parseTag('\\2')",$content);
+        $content = preg_replace_callback('/('.$this->config['tmpl_begin'].')([^\d\s'.$this->config['tmpl_begin'].$this->config['tmpl_end'].'].+?)('.$this->config['tmpl_end'].')/is',function($matches) use($that){
+            return $that->parseTag($matches[2]);
+        },$content);
         return $content;
+
     }
 
     // 检查PHP语法
@@ -259,18 +268,26 @@ class  ThinkTemplate {
         $end        =   $this->config['taglib_end'];        
         // 读取模板中的继承标签
         $find       =   preg_match('/'.$begin.'extend\s(.+?)\s*?\/'.$end.'/is',$content,$matches);
+        $that=$this;
         if($find) {
             //替换extend标签
             $content    =   str_replace($matches[0],'',$content);
             // 记录页面中的block标签
-            preg_replace('/'.$begin.'block\sname=(.+?)\s*?'.$end.'(.*?)'.$begin.'\/block'.$end.'/eis',"\$this->parseBlock('\\1','\\2')",$content);
+            preg_replace_callback('/'.$begin.'block\sname=(.+?)\s*?'.$end.'(.*?)'.$begin.'\/block'.$end.'/is',function($matches) use($that){
+                return $that->replaceBlock($matches[1],$matches[2]);
+            },$content);
             // 读取继承模板
             $array      =   $this->parseXmlAttrs($matches[1]);
             $content    =   $this->parseTemplateName($array['name']);
+
             // 替换block标签
-            $content    =   preg_replace('/'.$begin.'block\sname=(.+?)\s*?'.$end.'(.*?)'.$begin.'\/block'.$end.'/eis',"\$this->replaceBlock('\\1','\\2')",$content);
+            $content    =   preg_replace_callback('/'.$begin.'block\sname=(.+?)\s*?'.$end.'(.*?)'.$begin.'\/block'.$end.'/is',function($matches) use($that){
+                return $that->replaceBlock($matches[1],$matches[2]);
+            },$content);
         }else{
-            $content    =   preg_replace('/'.$begin.'block\sname=(.+?)\s*?'.$end.'(.*?)'.$begin.'\/block'.$end.'/eis',"stripslashes('\\2')",$content);            
+            $content    =   preg_replace_callback('/'.$begin.'block\sname=(.+?)\s*?'.$end.'(.*?)'.$begin.'\/block'.$end.'/is',function($matches){
+                return stripslashes($matches[2]);
+            },$content);
         }
         return $content;
     }
@@ -393,15 +410,23 @@ class  ThinkTemplate {
                     $tag  =  $name;
                 }
                 $n1 = empty($val['attr'])?'(\s*?)':'\s([^'.$end.']*)';
+                $that=$this;
                 if (!$closeTag){
-                    $patterns       = '/'.$begin.$parseTag.$n1.'\/(\s*?)'.$end.'/eis';
-                    $replacement    = "\$this->parseXmlTag('$tagLib','$tag','$1','')";
-                    $content        = preg_replace($patterns, $replacement,$content);
+                    $patterns       = '/'.$begin.$parseTag.$n1.'\/(\s*?)'.$end.'/is';
+
+                    $content=preg_replace_callback($patterns,function($matches) use($tagLib,$tag,$that){
+                        return $that->parseXmlTag($tagLib,$tag,$matches[1],'');
+                    },$content);
                 }else{
-                    $patterns       = '/'.$begin.$parseTag.$n1.$end.'(.*?)'.$begin.'\/'.$parseTag.'(\s*?)'.$end.'/eis';
-                    $replacement    = "\$this->parseXmlTag('$tagLib','$tag','$1','$2')";
-                    for($i=0;$i<$level;$i++) 
-                        $content=preg_replace($patterns,$replacement,$content);
+                    $patterns       = '/'.$begin.$parseTag.$n1.$end.'(.*?)'.$begin.'\/'.$parseTag.'(\s*?)'.$end.'/is';
+
+
+                    for($i=0;$i<$level;$i++)
+
+                        $content=preg_replace_callback($patterns,function($matches) use($tagLib,$tag,$that){
+                            return $that->parseXmlTag($tagLib,$tag,$matches[1],$matches[2]);
+                        },$content);
+
                 }
             }
         }

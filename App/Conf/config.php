@@ -7,6 +7,6 @@ return array(
     'APP_GROUP_PATH'=>"Modules",
 
     'LOAD_EXT_CONFIG'=>'db',
-
+    'SHOW_PAGE_TRACE'=>true,//显示调试页面
 );
 ?>

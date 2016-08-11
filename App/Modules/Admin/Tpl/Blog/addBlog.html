@@ -30,7 +30,7 @@
 <body>
 
 <form action="{:U(GROUP_NAME.'/Blog/runAddBlog')}" method="post" enctype="multipart/form-data">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover">
         <tr>
             <th colspan="2">添加博文</th>
         </tr>
@@ -46,18 +46,22 @@
             </td>
         </tr>
         <tr>
-            <td align="right">博文标题</td>
+            <td align="right">博文标题:</td>
             <td>
                 <input type="text" name="title">
             </td>
         </tr>
         <tr>
-            <td align="right">博文属性</td>
+            <td align="right">博文属性:</td>
             <td>
                 <foreach name="attribute" item="v">
                     <input type="checkbox" name="aid[]" value="{$v.id}">&nbsp;{$v.aname}&nbsp;&nbsp;
                 </foreach>
             </td>
+        </tr>
+        <tr>
+            <td align="right">点击次数:</td>
+            <td><input type="text" value="100" name="click"></td>
         </tr>
         <tr>
             <td align="right">博文内容</td>

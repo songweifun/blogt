@@ -30,7 +30,7 @@
 <body>
 
 <form action="<?php echo U(GROUP_NAME.'/Blog/runAddBlog');?>" method="post" enctype="multipart/form-data">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover">
         <tr>
             <th colspan="2">添加博文</th>
         </tr>
@@ -44,16 +44,20 @@
             </td>
         </tr>
         <tr>
-            <td align="right">博文标题</td>
+            <td align="right">博文标题:</td>
             <td>
                 <input type="text" name="title">
             </td>
         </tr>
         <tr>
-            <td align="right">博文属性</td>
+            <td align="right">博文属性:</td>
             <td>
                 <?php if(is_array($attribute)): foreach($attribute as $key=>$v): ?><input type="checkbox" name="aid[]" value="<?php echo ($v["id"]); ?>">&nbsp;<?php echo ($v["aname"]); ?>&nbsp;&nbsp;<?php endforeach; endif; ?>
             </td>
+        </tr>
+        <tr>
+            <td align="right">点击次数:</td>
+            <td><input type="text" value="100" name="click"></td>
         </tr>
         <tr>
             <td align="right">博文内容</td>
