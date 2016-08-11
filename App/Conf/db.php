@@ -1,0 +1,1 @@
+<?php	return array ( 'DB_HOST' => 'localhost', 'DB_NAME' => 'blog', 'DB_USER' => 'root', 'DB_PWD' => 'admin888', 'DB_PREFIX' => '6d_', );?>

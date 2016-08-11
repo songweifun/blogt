@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>栏目列表</title>
+    <js file="__PUBLIC__/js/jquery.min.js"/>
+    <js file="__PUBLIC__/js/bootstrap.js"/>
+    <css file="__PUBLIC__/css/bootstrap.css"/>
+</head>
+<body>
+<!--
+<form action="{:U(GROUP_NAME.'/Category/setSort')}" method="post">
+    <table class="table table-border">
+        <tr>
+            <th>栏目ID</th>
+            <th>栏目名称</th>
+            <th>栏目等级</th>
+            <th>栏目排序<button type="submit" class="btn btn-primary btn-xs">重新排序</button></th>
+            <th>操作</th>
+        </tr>
+        <foreach name="category" item="v">
+            <tr>
+                <td>{$v.id}</td>
+                <td>{$v.html}{$v.cname}</td>
+                <td>{$v.level}</td>
+                <td>
+                    <input type="text" name="{$v.id}" value="{$v.sort}">
+                </td>
+                <td>
+                    [<a href="{:U(GROUP_NAME.'/Category/addCategory',array('pid'=>$v['id']))}">添加子栏目</a>]
+                    [<a href="">修改</a>]
+                    [<a href="">删除</a>]
+                </td>
+            </tr>
+        </foreach>
+        <tr>
+            <td colspan="5" align="center">
+
+            </td>
+        </tr>
+
+    </table>
+</form>
+-->
+
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+    <foreach name="category" item="v">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingOne">
+                <h4 class="panel-title">
+                    <ul class="list-inline">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{$v.cname}" aria-expanded="true" aria-controls="collapseOne">
+
+
+                            <li>{$v.cname}</li>
+
+                    </a>
+                        <div style="margin-left: 100px;">
+                        [<a href="{:U(GROUP_NAME.'/Category/addCategory',array('pid'=>$v['id']))}">添加子栏目</a>]
+                        [<a href="">修改</a>]
+                        [<a href="">删除</a>]
+                        </div>
+
+                </h4>
+            </div>
+            <div id="collapse{$v.cname}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{$v.cname}">
+                <div class="panel-body">
+                    <table class="table table-border">
+                        <tr>
+                            <th>栏目ID</th>
+                            <th>栏目名称</th>
+                            <th>栏目等级</th>
+                            <th>栏目排序<button type="submit" class="btn btn-primary btn-xs">重新排序</button></th>
+                            <th>操作</th>
+                        </tr>
+                        <foreach name="v.child" item="value">
+                            <tr>
+                                <td>{$value.id}</td>
+                                <td>{$value.cname}</td>
+                                <td>{$value.level}</td>
+                                <td>
+                                    <input type="text" name="{$value.id}" value="{$value.sort}">
+                                </td>
+                                <td>
+                                    [<a href="{:U(GROUP_NAME.'/Category/addCategory',array('pid'=>$value['id']))}">添加子栏目</a>]
+                                    [<a href="">修改</a>]
+                                    [<a href="">删除</a>]
+                                </td>
+                            </tr>
+
+                        </foreach>
+                        </table>
+                </div>
+            </div>
+        </div>
+    </foreach>
+
+</div>
+</body>
+
+</html>
