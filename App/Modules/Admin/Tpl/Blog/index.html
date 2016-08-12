@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>博文列表</title>
+    <css file="__PUBLIC__/css/bootstrap.css"/>
+</head>
+<body>
+<table class="table table-bordered table-hover">
+    <tr>
+        <th>ID</th>
+        <th>属性</th>
+        <th>栏目</th>
+        <th>发布时间</th>
+        <th>点击次数</th>
+        <th>操作</th>
+    </tr>
+    <foreach name="blog" item="v">
+        <tr>
+            <td>{$v.id}</td>
+            <td>{$v.title} <foreach name="v.attr" item="value"><strong style="color:{$value.color};margin: 10px;">[{$value.aname}]</strong></foreach>
+            </td>
+            <td>{$v.cate}</td>
+            <td>{$v.time|date='Y-m-d H:i',###}</td>
+            <td>{$v.click}</td>
+            <td>
+                <if condition="ACTION_NAME eq 'index'">
+                [<a href="">修改</a>]
+                [<a href="{:U(GROUP_NAME.'/Blog/toTrash',array('id'=>$v['id'],'type'=>1))}">删除</a>]
+                    <else/>
+                [<a href="{:U(GROUP_NAME.'/Blog/toTrash',array('id'=>$v['id'],'type'=>0))}">还原</a>]
+                [<a href="{:U(GROUP_NAME.'/Blog/shiftDelete',array('id'=>$v['id']))}">彻底删除</a>]
+
+                    </if>
+
+            </td>
+        </tr>
+
+    </foreach>
+</table>
+
+</body>
+</html>

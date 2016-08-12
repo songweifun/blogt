@@ -11,8 +11,51 @@ class BlogAction extends CommonAction{
      * 博文列表
      */
     public function index(){
-        echo 1111;
-        //$this->display();
+        $this->blog=D('BlogRelation')->getBlogs(0);
+        //p($blog);die;
+        $this->display();
+    }
+    /**
+     * 将博文移入回收站
+     */
+    public function toTrash(){
+       $id=(int)$_GET['id'];
+        $type=(int)$_GET['type'];
+        $update=array(
+          'id'=>$id,
+          'isdel'=>$type
+        );
+        $msg=$type?'删除':'还原';
+        if(M('blog')->save($update)){
+            $this->success($msg.'成功',U(GROUP_NAME.'/Blog/index'));
+        }else{
+            $this->error($msg.'失败');
+        }
+
+    }
+    /**
+     * 博文回收站
+     */
+    public function trash(){
+        $this->blog=D('BlogRelation')->getBlogs(1);
+
+        $this->display('index');
+    }
+    /**
+     *彻底删除
+     */
+    public function shiftDelete(){
+        $id=(int)$_GET['id'];
+        //echo $id;
+        //D('BlogRelation')->relation('attribute')->delete($id);
+        //$this->display('index');
+        if(M('blog')->where(array('id'=>$id))->delete()){
+            M('blog_attribute')->where(array('bid'=>$id))->delete();
+            $this->success('已彻底删除',U(GROUP_NAME.'/Blog/trash'));
+        }else{
+            $this->success('彻底删除失败');
+        }
+
     }
     /**
      * 添加博文
