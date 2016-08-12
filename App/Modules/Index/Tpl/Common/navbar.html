@@ -1,0 +1,28 @@
+<php>
+    $cate=M('category')->order('sort')->select();
+    import('Class.Category',APP_NAME);
+    $cate=Category::twoDimensionalArray($cate);
+</php>
+
+
+<div class='top-nav-wrap'>
+    <ul class='nav-lv1'>
+
+        <li class='nav-lv1-li'>
+            <a href="" class='top-cate'>博客首页</a>
+        </li>
+        <foreach name="cate" item="v">
+            <li class='nav-lv1-li'>
+                <a href="" class='top-cate'>{$v.cname}</a>
+                <if condition="$v['child']">
+                    <ul>
+                        <foreach name="v.child" item="value">
+                            <li><a href="">{$value.cname}</a></li>
+                        </foreach>
+                    </ul>
+                </if>
+            </li>
+        </foreach>
+
+    </ul>
+</div>
