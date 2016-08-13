@@ -7,6 +7,7 @@
  */
 class ListAction extends Action{
     public function index(){
+        //p($_GET);die;
         $this->display();
     }
 }
