@@ -1,60 +1,33 @@
 <include file="Common:head"/>
 	<link rel="stylesheet" href="__PUBLIC__/Css/show.css" />
+	<css file="__ROOT__/Data/Ueditor/third-party/SyntaxHighlighter/shCoreDefault.css"/>
+	<js file="__ROOT__/Data/Ueditor/third-party/SyntaxHighlighter/shCore.js"/>
 
 <include file="Common:navbar"/>
+<script>
+	SyntaxHighlighter.all()
+</script>
 
 <!--主体-->
 	<div class='main'>
 		<div class='main-left'>
 			<div class='location'>
+
 				<a href="">首页</a>>
-				<a href="">PHP</a>>
-				<a href="">对象</a>
+				<php>$last=count($parents)-1;</php>
+				<foreach name="parents" item="v">
+				  <a href="">{$v.cname}</a><if condition="$key neq $last">></if>
+				</foreach>
 			</div>
 			<div class="title">
-				<p>对象的产生与生命周期</p>
+				<p>{$blog.title}</p>
 				<div>
-					<span class='fl'>发布于：2013年12月12日</span>
-					<span class='fr'>已被阅读1024次</span>
+					<span class='fl'>发布于：{$blog.time|date='Y年m月d日',###}</span>
+					<span class='fr'>已阅读<script type="text/javascript" src="{:U(GROUP_NAME.'/Show/clickNum',array('id'=>$blog['id']))}"></script>次</span>
 				</div>
 			</div>
-			<div class='content'>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
-				这里是正文<br/>
+			<div class='content'style="word-break: break-all">
+				{$blog.content}
 			</div>
 		</div>
 <include file="Common:right"/>

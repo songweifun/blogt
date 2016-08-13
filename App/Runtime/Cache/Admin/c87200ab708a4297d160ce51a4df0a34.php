@@ -50,6 +50,12 @@
             </td>
         </tr>
         <tr>
+            <td align="right">博文简介:</td>
+            <td>
+                <input type="text" name="summary">
+            </td>
+        </tr>
+        <tr>
             <td align="right">博文属性:</td>
             <td>
                 <?php if(is_array($attribute)): foreach($attribute as $key=>$v): ?><input type="checkbox" name="aid[]" value="<?php echo ($v["id"]); ?>">&nbsp;<?php echo ($v["aname"]); ?>&nbsp;&nbsp;<?php endforeach; endif; ?>

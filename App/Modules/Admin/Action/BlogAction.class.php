@@ -90,7 +90,8 @@ class BlogAction extends CommonAction{
 
         $data=array(
             'title'=>I('title'),
-            'content'=>I('content'),
+            'summary'=>I('summary'),
+            'content'=>$_POST['content'],
             'time'=>time(),
             'click'=>I('click','intval'),
             'cid'=>I('cid','intval')
